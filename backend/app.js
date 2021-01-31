@@ -18,8 +18,8 @@ app.use(bodyParser.json());
 
 const db = mysql.createConnection({
     host     : '127.0.0.1',
-    user     : 'root',
-    database : 'swftbox'
+    user     : 'root'
+    // database : 'swftbox'
 });
 
 db.connect((err) => {
@@ -46,21 +46,22 @@ app.get('/createdbandtable', (req, res) => {
 
 
 app.post('/createevent', (req, res) => {
+    
     const eventName = req.body.eventName;
     const eventStartTime = req.body.eventStartTime;
     const eventEndTime = req.body.eventEndTime;
     console.log(eventStartTime, eventEndTime);
-    const checkExistingEventSql = `SELECT COUNT(*) as eventCount FROM events WHERE starttime BETWEEN '${eventStartTime}' and '${eventEndTime}' OR endtime BETWEEN '${eventStartTime}' and '${eventEndTime}'`;
+    const checkExistingEventSql = `SELECT COUNT(*) as eventCount FROM swftbox.events WHERE starttime BETWEEN '${eventStartTime}' and '${eventEndTime}' OR endtime BETWEEN '${eventStartTime}' and '${eventEndTime}'  OR ( starttime < '${eventStartTime}' and endtime > '${eventEndTime}' )`;
     db.query(checkExistingEventSql, (err1, results) => {
         if (err1) throw err;
         if (results[0]['eventCount'] > 0) {
-            res.send('Existing event during selected duration');
+            res.send('exist');
         }
         else {
-            const createEventSql = `INSERT INTO events (name, starttime, endtime) VALUES ( '${eventName}', '${eventStartTime}' , '${eventEndTime}')`;
+            const createEventSql = `INSERT INTO swftbox.events (name, starttime, endtime) VALUES ( '${eventName}', '${eventStartTime}' , '${eventEndTime}')`;
             db.query(createEventSql, (err2, results) => {
                 if (err2) throw err;
-                res.send('Event created');
+                res.send('success');
             });
         }
     });    

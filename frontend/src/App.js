@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 
 const App = () => {
 
-  const [eventName, setEventName] = useState('');
-  const [eventStartTime, setEventStartTime] = useState(new Date());
-  const [eventEndTime, setEventEndTime] = useState(new Date());
+  let [eventName, setEventName] = useState('');
+  let [eventStartTime, setEventStartTime] = useState(new Date());
+  let [eventEndTime, setEventEndTime] = useState(new Date());
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,6 +20,13 @@ const App = () => {
       }
       axios.post('/createevent', data).then((res) => {
         console.log(res);
+        if (res.data === 'exist') alert('An event exist during this duration');
+        if (res.data === 'success') {
+          alert('Event Created');
+          setEventName('')
+          setEventStartTime(new Date());
+          setEventEndTime(new Date());
+        }
       });
     }  
   }
@@ -30,12 +37,15 @@ const App = () => {
   
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value="" placeholder="Event Name" onChange={handleEventNameChange} value={eventName}/>
-      <input type="datetime-local" id="starttime" name="starttime" onChange={handleStartTimeChange} value={eventStartTime}/>
-      <input type="datetime-local" id="endtime" name="endtime" onChange={handleEndTimeChange} value={eventEndTime}/>
-      <button type="submit">Create Event</button>
-    </form>
+    <React.Fragment>
+      <h1>Book time slot for an event</h1>
+      <form onSubmit={handleSubmit}>
+        <input required type="text" value="" placeholder="Event Name" onChange={handleEventNameChange} value={eventName}/>
+        <input required type="datetime-local" id="starttime" name="starttime" onChange={handleStartTimeChange} value={eventStartTime}/>
+        <input required type="datetime-local" id="endtime" name="endtime" onChange={handleEndTimeChange} value={eventEndTime}/>
+        <button type="submit">Create Event</button>
+      </form>
+    </React.Fragment>
   );
 }
 
