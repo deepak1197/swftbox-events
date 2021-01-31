@@ -10,14 +10,14 @@ const db = mysql.createConnection({
 });
 
 
-# FRONTEND
-# Uses PORT 3000
+# FRONTEND - Runs on Port 3000
 
+Install Dependencies: npm i
 Run frontend: npm start               
 
-# BACKEND
-# Uses port 3400
+# BACKEND - Runs on Port 3400
 
+Install Dependencies: npm i
 Run Backend: nodemon app.js or node app.js 
 
 # CREATE DATABASE & TABLE
