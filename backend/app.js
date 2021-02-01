@@ -1,33 +1,12 @@
 const express = require('express');
-const mysql = require('mysql');
+const cors = require('./cors');
+const db = require('./db');
 const app = express();
 const bodyParser = require('body-parser');
 
-app.use(function (req, res, next) {
-
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if using sending cookies with request.
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
+app.use(cors);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-const db = mysql.createConnection({
-    host     : '127.0.0.1',
-    user     : 'root'
-    // database : 'swftbox'
-});
-
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log(`connected to Database`);
-});
 
 app.get('/createdbandtable', (req, res) => {
     let createDBSql = 'CREATE DATABASE IF NOT EXISTS swftbox';
